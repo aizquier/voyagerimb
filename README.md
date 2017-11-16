@@ -8,7 +8,7 @@ In 1977 NASA sent into space the famous Voyager I and II spaceprobes. A message 
 
 Being the disks carriers of sound, the images had to be encoded in an audio signal, in the shape of soundwaves representing consecutive scanlines of the images, in a similar fashion that the method used to broadcast TV.
 
-Recently, a team leaded by David Pescovitz gained access to the original master tapes used by NASA to create the message, and started a campain to crowd fund a remastered new edition of the Golden Record. Thanks to the kind help of Mr. Pescovitz, I was able to examine a high quality copy of the images audio signal, a 32-bit .wav file digitized at sample rate of 384kHz. The current program is a simple tool I created to examine the images encoded in the audio signals.
+Recently, a team leaded by David Pescovitz gained access to the original master tapes used by NASA to create the message, and started a campain to crowd fund a [remastered new edition of the Golden Record](http://www.ozmarecords.com). Thanks to the kind help of Mr. Pescovitz, I was able to examine a high quality copy of the images audio signal, a 32-bit .wav file digitized at sample rate of 384kHz. The current program is a simple tool I created to examine the images encoded in the audio signals.
 
 # Theory of operation
 
@@ -209,6 +209,11 @@ This box deserves a more detailed explanation. As discussed before, the offset d
 - NoS x SLW : Jump an interval of an image
 
 just press the button of the desired interval and experiment with the **sub** and **add** buttons. The image is replotted after any button press. By playing with these parameter it is relatively easy to explore and discover the images encoded in the audio files. 
+
+#### Matplotlib controls
+
+In the bottom of the image, the standard Matplolib buttons are included. These allow operations as pan, zoom in/out, save plots, etc. Use them as needed. 
+
 
 ## TODOs
 

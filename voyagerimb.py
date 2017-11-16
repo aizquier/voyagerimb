@@ -132,7 +132,7 @@ class FileMenu(object):
     def about(self):
         '''Starts project webpage in the default system's web browser'''
         
-        webpage = "http://www.github.com/aizquier"
+        webpage = "https://github.com/aizquier/voyagerimb"
         
         # * MacOS
         if sys.platform.startswith('darwin'):

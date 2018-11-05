@@ -30,11 +30,17 @@ import scipy.io.wavfile
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 import tkinter as tk
-from tkinter import messagebox
 from PIL import Image
 
+# * support for previous matplotlib versions (v1, v2) and the current v3 
+mpltlib3 = True if int(matplotlib.__version__.split('.')[0]) > 2 else False
+if mpltlib3:
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+    from tkinter import messagebox, filedialog
+else:
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+    from tkinter import messagebox
 
 
 class ValidatedEntry(object):
@@ -224,7 +230,10 @@ class Imager(object):
             self.ax2.set_xlabel("Offset (relative)")
             self.ax2.set_ylabel("signal")
             self.ax2.plot(range(len(image_data[self.browser.plot_scanline])), image_data[self.browser.plot_scanline])
-            self.canvas.show()
+            if self.mpltlib3:
+                self.canvas.draw()
+            else:
+                self.canvas.show()
         else:
             self.browser.view_offset_exceeded_error()
 
@@ -239,15 +248,21 @@ class Imager(object):
         plt.subplots_adjust(left=0.1, bottom=0.05, right=0.95, top=0.97, wspace=0.2, hspace=0.2)
         self.view_plot_image()
         self.canvas = FigureCanvasTkAgg(self.figure, self.frame)
-        self.canvas.show()
-        self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
-        toolbar = NavigationToolbar2TkAgg(self.canvas, self.frame).update()
+        if self.mpltlib3:
+            self.canvas.draw()
+            toolbar = NavigationToolbar2Tk(self.canvas, self.frame).update()
+        else:
+            self.canvas.show()
+            toolbar = NavigationToolbar2TkAgg(self.canvas, self.frame).update()
+
+        self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
         self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, padx=2, pady=2, expand=True)
         self.frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=7, pady=7)
 
-    def __init__(self, parent):
+    def __init__(self, parent, mpltlib3=True):
+        self.mpltlib3 = mpltlib3
         self.browser = parent
         self.model_init()
         self.view_init()
@@ -538,11 +553,11 @@ class VoyagerBrowser(object):
         self.root.destroy()
         sys.exit(0)
 
-    def view_init(self):
+    def view_init(self, mpltlib3):
         self.root = tk.Tk()
         self.workframe = tk.Frame(self.root)
         self.menu = FileMenu(self)
-        self.imager = Imager(self)
+        self.imager = Imager(self, mpltlib3)
         self.controlwidgets = ControlWidgets(self)
         self.workframe.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
@@ -559,11 +574,11 @@ class VoyagerBrowser(object):
     def view_mainloop(self):
         self.root.mainloop()
 
-    def __init__(self):
+    def __init__(self, mpltlib3=True):
         self.model_init()
-        self.view_init()
+        self.view_init(mpltlib3)
         self.view_mainloop()
 
 
 if __name__ == "__main__":
-    VoyagerBrowser()
+    VoyagerBrowser(mpltlib3)

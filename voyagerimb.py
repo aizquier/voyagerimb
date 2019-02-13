@@ -36,10 +36,14 @@ from PIL import Image
 # * support for previous matplotlib versions (v1, v2) and the current v3
 mpltlib3 = True if int(matplotlib.__version__.split('.')[0]) > 2 else False
 if mpltlib3:
-    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+    from matplotlib.backends.backend_tkagg import (
+        FigureCanvasTkAgg, NavigationToolbar2Tk
+        )
     from tkinter import messagebox, filedialog
 else:
-    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+    from matplotlib.backends.backend_tkagg import (
+        FigureCanvasTkAgg, NavigationToolbar2TkAgg
+    )
     from tkinter import messagebox
 
 

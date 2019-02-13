@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 import tkinter as tk
 from PIL import Image
 
-# * support for previous matplotlib versions (v1, v2) and the current v3 
+# * support for previous matplotlib versions (v1, v2) and the current v3
 mpltlib3 = True if int(matplotlib.__version__.split('.')[0]) > 2 else False
 if mpltlib3:
     from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -72,9 +72,9 @@ class NumericalFloatEntry(ValidatedEntry):
 class FileMenu(object):
     def openfile(self):
         filename = tk.filedialog.askopenfilename(
-            initialdir = os.getcwd(),
-            title = "Select file",
-            filetypes = (("wav files","*.wav"), )
+            initialdir=os.getcwd(),
+            title="Select file",
+            filetypes=(("wav files", "*.wav"), )
         )
 
         if len(filename) != 0:
@@ -104,7 +104,7 @@ class FileMenu(object):
 
     def __save_image(self, resize=False):
         filename = tk.filedialog.asksaveasfilename(defaultextension=".bin")
-        if filename is None: # asksaveasfile return `None` if dialog closed with "cancel".
+        if filename is None:# asksaveasfile return `None` if dialog closed with "cancel".
             return
 
         data = np.array(self.browser.imager.model_get_segment())
@@ -115,31 +115,35 @@ class FileMenu(object):
         data_rescaled_colors = ((m * data) + b).astype(np.uint8)
         image = Image.fromarray(data_rescaled_colors)
         if resize:
-            image = image.resize((image.width, int(image.width * (4.0/ 3.0)) ))
+            image = image.resize((image.width, int(image.width * (4.0 / 3.0)) ))
 
         try:
             image.save(filename)
         except KeyError:
-            messagebox.showerror("Export image", "Invalid image format.\nTry using file extensions like .png or .jpg")
+            messagebox.showerror("Export image", "Invalid image format.\nTry \
+                using file extensions like .png or .jpg")
             return
         except IOError:
             messagebox.showerror("Export image",
-                                 "Error saving image.\nCheck that you have enough disk space\nor right privileges")
+                                 "Error saving image.\nCheck that you have \
+                                 enough disk space\nor right privileges")
             return
 
-        messagebox.showinfo("Export image", "Image exported as %s" % (filename))
+        messagebox.showinfo(
+            "Export image", "Image exported as %s" % (filename)
+            )
 
     def save_image_raw_size(self):
         self.__save_image(resize=False)
 
     def save_image_resized(self):
         self.__save_image(resize=True)
-        
+
     def about(self):
         '''Starts project webpage in the default system's web browser'''
-        
+
         webpage = "https://github.com/aizquier/voyagerimb"
-        
+
         # * MacOS
         if sys.platform.startswith('darwin'):
             subprocess.call(('open', webpage))
@@ -148,7 +152,7 @@ class FileMenu(object):
             os.startfile(webpage)
         # * Linux
         elif os.name == 'posix':
-            subprocess.Popen(['xdg-open', webpage]) 
+            subprocess.Popen(['xdg-open', webpage])
 
     def __init__(self, parent):
         self.browser = parent
@@ -157,17 +161,28 @@ class FileMenu(object):
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="Open WAV...", command=self.openfile)
         filemenu.add_separator()
-        filemenu.add_command(label="Export image...", command=self.save_image_resized)
-        filemenu.add_command(label="Export image (raw size)...", command=self.save_image_raw_size)
+        filemenu.add_command(
+                label="Export image...",
+                command=self.save_image_resized)
+        filemenu.add_command(
+                label="Export image (raw size)...",
+                command=self.save_image_raw_size)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=parent.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
 
         filemenu = tk.Menu(menubar, tearoff=0)
-        filemenu.add_checkbutton(label="Invert audio signal", onvalue=True, offvalue=False, variable=self.invert_signal)
-        filemenu.add_checkbutton(label="Flip horizontal", onvalue=True, offvalue=False, variable=self.flip_horizontal)
+        filemenu.add_checkbutton(
+                label="Invert audio signal",
+                onvalue=True, offvalue=False,
+                variable=self.invert_signal)
+        filemenu.add_checkbutton(
+                label="Flip horizontal",
+                onvalue=True,
+                offvalue=False,
+                variable=self.flip_horizontal)
         menubar.add_cascade(label="Image", menu=filemenu)
-        
+
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="About...", command=self.about)
         menubar.add_cascade(label="Help", menu=filemenu)
@@ -182,14 +197,15 @@ class Imager(object):
         pass
 
     def model_get_segment(self):
-        offset = self.browser.offset 
+        offset = self.browser.offset
         scan_width = self.browser.scan_line_width
         image_data = []
         offset_exceeded = False
 
         for scan in range(self.browser.number_of_scans):
             chunk = [-_m if self.browser.invert_signal
-                     else _m for _m in self.browser.audio_data[int(offset):int(offset) + scan_width]]
+                     else _m for _m in
+                     self.browser.audio_data[int(offset):int(offset) + scan_width]]
             if len(chunk) != scan_width:
                 chunk = np.zeros(scan_width)
                 offset_exceeded = True
@@ -256,10 +272,23 @@ class Imager(object):
             self.canvas.show()
             toolbar = NavigationToolbar2TkAgg(self.canvas, self.frame).update()
 
-        self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.canvas.get_tk_widget().pack(
+            side=tk.BOTTOM,
+            fill=tk.BOTH,
+            expand=True)
 
-        self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, padx=2, pady=2, expand=True)
-        self.frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=7, pady=7)
+        self.canvas._tkcanvas.pack(
+            side=tk.TOP,
+            fill=tk.BOTH,
+            padx=2,
+            pady=2,
+            expand=True)
+        self.frame.pack(
+            side=tk.LEFT,
+            fill=tk.BOTH,
+            expand=True,
+            padx=7,
+            pady=7)
 
     def __init__(self, parent, mpltlib3=True):
         self.mpltlib3 = mpltlib3
@@ -270,7 +299,6 @@ class Imager(object):
 
 
 class OffsetControl(object):
-
         def model_modify_offset(self, sign):
             if self.browser.audio_data is not None:
                 maxsize = len(self.browser.audio_data) - 1
@@ -286,10 +314,10 @@ class OffsetControl(object):
                         "100"       : 100,
                         "1000"      : 1000,
                         "NoS x SLW" : self.browser.number_of_scans * self.browser.scan_line_width,
-                        "100 x SLW" : 100 * self.browser.scan_line_width, 
-                        "10 x SLW"  : 10 *self.browser.scan_line_width, 
+                        "100 x SLW" : 100 * self.browser.scan_line_width,
+                        "10 x SLW"  : 10 *self.browser.scan_line_width,
                         "1 x SLW"   : self.browser.scan_line_width
-                    }[self.interval_value_variable.get()] 
+                    }[self.interval_value_variable.get()]
 
                     if sign == "+":
                         self.browser.offset += delta
@@ -358,13 +386,13 @@ class OffsetControl(object):
             _mm = tk.Frame(fbottom)
 
             for radiobutrow in [["1000", "100", "10", "1"], ["NoS x SLW", "100 x SLW", "10 x SLW", "1 x SLW"]]:
-                _mmm =  tk.Frame(_mm)
+                _mmm = tk.Frame(_mm)
                 for interval_value in radiobutrow:
-                    _m = tk.Radiobutton(_mmm, 
+                    _m = tk.Radiobutton(_mmm,
                         text="%s" % (interval_value),
                         indicatoron=0,
                         foreground="#940015",
-                        variable=self.interval_value_variable, 
+                        variable=self.interval_value_variable,
                         value=interval_value,
                         width=1
                     )
@@ -377,7 +405,6 @@ class OffsetControl(object):
             ftop.pack(side=tk.TOP, fill=tk.BOTH,  padx=4, pady=4, expand=True)
             fbottom.pack(side=tk.TOP, fill=tk.BOTH,  padx=4, pady=4, expand=True)
             self.frame.pack(side=tk.TOP, fill=tk.X, padx=7, pady=7, expand=False)
-
 
         def __init__(self, parent):
             self.controlwidgets = parent
@@ -476,10 +503,19 @@ class AdjustControl(object):
         self.frame = tk.LabelFrame(self.parent.frame, text=" Offset Adjust ")
         self.adjust_control_entry = NumericalFloatEntry(self.frame)
         self.adjust_control_entry.textvariable.set(0)
-        self.adjust_control_entry.textvariable.trace("w", self.model_sync_with_entry)
-        self.adjust_control_entry.Entry.pack(side=tk.LEFT, fill=tk.X, padx=4, pady=4, expand=True)
-        tk.Button(self.frame, text="-", command=self.model_decrease).pack(side=tk.LEFT)
-        tk.Button(self.frame, text="+", command=self.model_increase).pack(side=tk.LEFT)
+        self.adjust_control_entry.textvariable.trace(
+            "w",
+            self.model_sync_with_entry)
+        self.adjust_control_entry.Entry.pack(
+            side=tk.LEFT,
+            fill=tk.X,
+            padx=4,
+            pady=4,
+            expand=True)
+        tk.Button(self.frame, text="-", command=self.model_decrease).pack(
+            side=tk.LEFT)
+        tk.Button(self.frame, text="+", command=self.model_increase).pack(
+            side=tk.LEFT)
         self.frame.pack(side=tk.TOP, fill=tk.X, padx=7, pady=7, expand=False)
 
 
@@ -504,12 +540,27 @@ class ScanlinePlotSliderControl(object):
         self.parent = parent
         self.browser = parent.browser
         self.frame = tk.LabelFrame(self.parent.frame, text=" Plot scanline ")
-        self.scale = tk.Scale(self.frame, from_=0, to=self.browser.number_of_scans,
-                              orient=tk.HORIZONTAL, showvalue=True, command=self.model_sync_with_entry )
-        self.scale.pack(side=tk.LEFT, fill=tk.X, padx=4, pady=4, anchor=tk.CENTER, expand=True)
-        self.parent.numberofscans.number_of_scans_entry.textvariable.trace("w", self.model_slide_range_update)
-        tk.Button(self.frame, text="-", command=self.model_decrease).pack(side=tk.LEFT)
-        tk.Button(self.frame, text="+", command=self.model_increase).pack(side=tk.LEFT)
+        self.scale = tk.Scale(
+            self.frame, 
+            from_=0, 
+            to=self.browser.number_of_scans,
+            orient=tk.HORIZONTAL, 
+            showvalue=True, 
+            command=self.model_sync_with_entry )
+        self.scale.pack(
+            side=tk.LEFT, 
+            fill=tk.X, 
+            padx=4, 
+            pady=4, 
+            anchor=tk.CENTER, 
+            expand=True)
+        self.parent.numberofscans.number_of_scans_entry.textvariable.trace(
+            "w", 
+            self.model_slide_range_update)
+        tk.Button(self.frame, text="-", command=self.model_decrease).pack(
+            side=tk.LEFT)
+        tk.Button(self.frame, text="+", command=self.model_increase).pack(
+            side=tk.LEFT)
         self.frame.pack(side=tk.TOP, fill=tk.X, padx=7, pady=7, expand=False)
 
 
@@ -521,11 +572,21 @@ class ControlWidgets(object):
         self.scansize = ScanLineWidthControl(self)
         self.numberofscans = NumberOfScansControl(self)
         self.adjust = AdjustControl(self)
-        self.scanlineplot =  ScanlinePlotSliderControl(self)
+        self.scanlineplot = ScanlinePlotSliderControl(self)
         self.offset = OffsetControl(self)
-        self.plotbutton = tk.Button(self.frame, text="REPLOT", height=3,
-                                    command=self.browser.imager.view_plot_image, relief=tk.GROOVE, borderwidth=4)
-        self.plotbutton.pack(side=tk.TOP, fill=tk.X, padx=4, pady=4, expand=False)
+        self.plotbutton = tk.Button(
+            self.frame, 
+            text="REPLOT", 
+            height=3,
+            command=self.browser.imager.view_plot_image, 
+            relief=tk.GROOVE, 
+            borderwidth=4)
+        self.plotbutton.pack(
+            side=tk.TOP, 
+            fill=tk.X, 
+            padx=4, 
+            pady=4, 
+            expand=False)
         self.frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
 

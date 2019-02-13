@@ -261,11 +261,17 @@ class Imager(object):
 
     def view_init(self):
         self.frame = tk.LabelFrame(self.browser.workframe, text=" Image ")
-        self.frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=7, pady=7)
+        self.frame.pack(
+            side=tk.LEFT, fill=tk.BOTH, 
+            expand=True, padx=7, pady=7)
         self.figure = plt.figure(figsize=(8, 12), dpi=70)
-        self.ax1 = plt.subplot2grid((50,40), (0, 0), rowspan=40, colspan=40)
-        self.ax2 = plt.subplot2grid((50,40), (42, 0), rowspan=8, colspan=40, sharex=self.ax1)
-        plt.subplots_adjust(left=0.1, bottom=0.05, right=0.95, top=0.97, wspace=0.2, hspace=0.2)
+        self.ax1 = plt.subplot2grid((50, 40), (0, 0), rowspan=40, colspan=40)
+        self.ax2 = plt.subplot2grid(
+            (50, 40), (42, 0), rowspan=8, 
+            colspan=40, sharex=self.ax1)
+        plt.subplots_adjust(
+            left=0.1, bottom=0.05, right=0.95, 
+            top=0.97, wspace=0.2, hspace=0.2)
         self.view_plot_image()
         self.canvas = FigureCanvasTkAgg(self.figure, self.frame)
 
@@ -331,7 +337,9 @@ class OffsetControl(object):
 
                     self.offset_entry.textvariable.set(self.browser.offset)
                 else:
-                    self.browser.offset = int(self.offset_entry.textvariable.get())
+                    self.browser.offset = int(
+                        self.offset_entry.textvariable.get()
+                        )
                     None
 
                 if self.browser.offset < 0:
@@ -376,23 +384,30 @@ class OffsetControl(object):
             self.interval_value_variable.set(1000)
 
         def view_init(self):
-            self.frame = tk.LabelFrame(self.controlwidgets.frame, text=" Offset ")
+            self.frame = tk.LabelFrame(
+                self.controlwidgets.frame, text=" Offset ")
             ftop = tk.Frame(self.frame)
             fbottom = tk.Frame(self.frame)
 
             self.offset_entry = NumericalIntEntry(ftop)
             self.offset_entry.textvariable.set("0")
-            self.offset_entry.textvariable.trace("w", self.model_sync_with_entry)
+            self.offset_entry.textvariable.trace(
+                "w", self.model_sync_with_entry)
             self.offset_entry.Entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
-            tk.Button(ftop, text="sub", width=1, command=self.model_decrement_offset).pack(side=tk.LEFT)
-            tk.Button(ftop, text="add", width=1, command=self.model_increment_offset).pack(side=tk.LEFT)
+            tk.Button(
+                ftop, text="sub", width=1,
+                command=self.model_decrement_offset).pack(side=tk.LEFT)
+            tk.Button(
+                ftop, text="add", width=1,
+                command=self.model_increment_offset).pack(side=tk.LEFT)
 
             _mm = tk.Frame(fbottom)
 
             for radiobutrow in [["1000", "100", "10", "1"], ["NoS x SLW", "100 x SLW", "10 x SLW", "1 x SLW"]]:
                 _mmm = tk.Frame(_mm)
                 for interval_value in radiobutrow:
-                    _m = tk.Radiobutton(_mmm,
+                    _m = tk.Radiobutton(
+                        _mmm,
                         text="%s" % (interval_value),
                         indicatoron=0,
                         foreground="#940015",
@@ -441,13 +456,20 @@ class ScanLineWidthControl(object):
     def __init__(self, parent):
         self.parent = parent
         self.browser = parent.browser
-        self.frame = tk.LabelFrame(self.parent.frame, text=" Scan line width (SLW)")
+        self.frame = tk.LabelFrame(
+            self.parent.frame,
+            text=" Scan line width (SLW)")
         self.scan_line_width_entry = NumericalIntEntry(self.frame)
         self.scan_line_width_entry.textvariable.set(3197)
-        self.scan_line_width_entry.textvariable.trace("w", self.model_sync_with_entry)
-        self.scan_line_width_entry.Entry.pack(side=tk.LEFT, fill=tk.X, padx=4, pady=4, expand=True)
-        tk.Button(self.frame, text="-", command=self.model_decrease).pack(side=tk.LEFT)
-        tk.Button(self.frame, text="+", command=self.model_increase).pack(side=tk.LEFT)
+        self.scan_line_width_entry.textvariable.trace(
+            "w", self.model_sync_with_entry)
+        self.scan_line_width_entry.Entry.pack(
+            side=tk.LEFT,
+            fill=tk.X, padx=4, pady=4, expand=True)
+        tk.Button(self.frame, text="-", command=self.model_decrease).pack(
+            side=tk.LEFT)
+        tk.Button(self.frame, text="+", command=self.model_increase).pack(
+            side=tk.LEFT)
         self.frame.pack(side=tk.TOP, fill=tk.X, padx=7, pady=7, expand=False)
 
 

@@ -470,18 +470,24 @@ class NumberOfScansControl(object):
                 self.browser.number_of_scans = 0
                 self.number_of_scans_entry.textvariable.set(0)
             else:
-               self.browser.number_of_scans = textvariable_as_int
+                self.browser.number_of_scans = textvariable_as_int
 
     def __init__(self, parent):
         self.parent = parent
         self.browser = parent.browser
-        self.frame = tk.LabelFrame(self.parent.frame, text=" Number of scans (NoS) per image ")
+        self.frame = tk.LabelFrame(
+            self.parent.frame,
+            text=" Number of scans (NoS) per image ")
         self.number_of_scans_entry = NumericalIntEntry(self.frame)
         self.number_of_scans_entry.textvariable.set(512)
-        self.number_of_scans_entry.textvariable.trace("w", self.model_sync_with_entry)
-        self.number_of_scans_entry.Entry.pack(side=tk.LEFT, fill=tk.X, padx=4, pady=4, expand=True)
-        tk.Button(self.frame, text="-", command=self.model_decrease).pack(side=tk.LEFT)
-        tk.Button(self.frame, text="+", command=self.model_increase).pack(side=tk.LEFT)
+        self.number_of_scans_entry.textvariable.trace(
+            "w", self.model_sync_with_entry)
+        self.number_of_scans_entry.Entry.pack(
+            side=tk.LEFT, fill=tk.X, padx=4, pady=4, expand=True)
+        tk.Button(self.frame, text="-", command=self.model_decrease).pack(
+            side=tk.LEFT)
+        tk.Button(self.frame, text="+", command=self.model_increase).pack(
+            side=tk.LEFT)
         self.frame.pack(side=tk.TOP, fill=tk.X, padx=7, pady=7, expand=False)
 
 
@@ -545,21 +551,21 @@ class ScanlinePlotSliderControl(object):
         self.browser = parent.browser
         self.frame = tk.LabelFrame(self.parent.frame, text=" Plot scanline ")
         self.scale = tk.Scale(
-            self.frame, 
-            from_=0, 
+            self.frame,
+            from_=0,
             to=self.browser.number_of_scans,
-            orient=tk.HORIZONTAL, 
-            showvalue=True, 
+            orient=tk.HORIZONTAL,
+            showvalue=True,
             command=self.model_sync_with_entry )
         self.scale.pack(
-            side=tk.LEFT, 
-            fill=tk.X, 
-            padx=4, 
-            pady=4, 
-            anchor=tk.CENTER, 
+            side=tk.LEFT,
+            fill=tk.X,
+            padx=4,
+            pady=4,
+            anchor=tk.CENTER,
             expand=True)
         self.parent.numberofscans.number_of_scans_entry.textvariable.trace(
-            "w", 
+            "w",
             self.model_slide_range_update)
         tk.Button(self.frame, text="-", command=self.model_decrease).pack(
             side=tk.LEFT)
@@ -579,17 +585,17 @@ class ControlWidgets(object):
         self.scanlineplot = ScanlinePlotSliderControl(self)
         self.offset = OffsetControl(self)
         self.plotbutton = tk.Button(
-            self.frame, 
-            text="REPLOT", 
+            self.frame,
+            text="REPLOT",
             height=3,
-            command=self.browser.imager.view_plot_image, 
-            relief=tk.GROOVE, 
+            command=self.browser.imager.view_plot_image,
+            relief=tk.GROOVE,
             borderwidth=4)
         self.plotbutton.pack(
-            side=tk.TOP, 
-            fill=tk.X, 
-            padx=4, 
-            pady=4, 
+            side=tk.TOP,
+            fill=tk.X,
+            padx=4,
+            pady=4,
             expand=False)
         self.frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
